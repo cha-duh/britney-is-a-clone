@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>It's Britney Bitch… OR IS IT???</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   BASE
+   ================================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  background: #0a0908;
+}
+h1,h2,h3,p { margin: 0; }
+
+/* ================================================================
+   DECK ENGINE
+   ================================================================ */
+deck-stage {
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  will-change: transform;
+}
+deck-stage > section {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+deck-stage > section.active { display: block; }
+
+/* ================================================================
+   DESIGN TOKENS
+   ================================================================ */
+:root {
+  --ink: #1a1612;
+  --paper: #f4ebd6;
+  --paper-dim: #e8dcc0;
+  --red: #c62828;
+  --red-deep: #8b1a1a;
+  --cream: #f6f0e4;
+  --cream-2: #efe7d5;
+  --charcoal: #2a2520;
+  --charcoal-2: #4a433b;
+  --burgundy: #6b2a2a;
+  --green-deep: #2f3b2a;
+}
+
+/* ================================================================
+   ACT 1 — CONSPIRACY
+   ================================================================ */
+.act1 {
+  width: 100%; height: 100%;
+  position: relative;
+  color: var(--paper);
+  font-family: 'Special Elite', 'Courier Prime', monospace;
+  overflow: hidden;
+  background:
+    radial-gradient(1200px 700px at 30% 20%, rgba(60,45,30,0.55), transparent 60%),
+    radial-gradient(900px 700px at 80% 85%, rgba(30,20,15,0.8), transparent 60%),
+    repeating-linear-gradient(23deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 5px),
+    #1a1410;
+}
+/* cork texture */
+.act1::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(140,90,50,0.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 78% 34%, rgba(120,80,40,0.14) 0 2px, transparent 3px),
+    radial-gradient(circle at 42% 71%, rgba(160,110,60,0.12) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 88% 82%, rgba(110,70,40,0.16) 0 2px, transparent 3px),
+    radial-gradient(circle at 22% 88%, rgba(140,90,50,0.1) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 60% 12%, rgba(100,70,40,0.14) 0 2px, transparent 3px);
+  background-size: 140px 140px, 180px 180px, 100px 100px, 200px 200px, 120px 120px, 160px 160px;
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+/* scanlines + vignette */
+.act1::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+  z-index: 10;
+}
+
+/* ================================================================
+   ACT 2 — EDITORIAL
+   ================================================================ */
+.act2 {
+  width: 100%; height: 100%;
+  position: relative;
+  background: var(--cream);
+  color: var(--charcoal);
+  font-family: 'EB Garamond', Georgia, serif;
+  overflow: hidden;
+}
+.act2.soft-tex::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 600px at 20% 30%, rgba(210,190,150,0.25), transparent 70%),
+    radial-gradient(800px 500px at 85% 80%, rgba(220,200,170,0.2), transparent 70%);
+  pointer-events: none;
+}
+
+/* ================================================================
+   REUSABLE COMPONENTS
+   ================================================================ */
+
+/* Pushpin tack */
+.tack {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff6b6b 0%, #c62828 40%, #6b1414 100%);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(0,0,0,0.4);
+  position: absolute; z-index: 5;
+}
+.tack.dark {
+  background: radial-gradient(circle at 35% 30%, #4a4a4a 0%, #1a1a1a 40%, #000 100%);
+}
+
+/* Polaroid-style photo card */
+.photo-card {
+  position: absolute;
+  background: #f4ebd6;
+  padding: 14px 14px 46px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 3;
+}
+.photo-card .photo {
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(135deg, rgba(40,30,25,0.9) 0 6px, rgba(60,45,35,0.9) 6px 12px);
+  position: relative;
+  overflow: hidden;
+}
+.photo-card .photo.dim { filter: brightness(0.85); }
+.photo-card .caption {
+  position: absolute; bottom: 12px; left: 14px; right: 14px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 14px; color: #3a2f22; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.photo-card .photo .stamp {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Courier Prime', monospace;
+  color: rgba(244,235,214,0.55);
+  font-size: 12px; letter-spacing: 0.3em;
+  text-align: center;
+  padding: 20px;
+  z-index: 1;
+}
+
+/* Photo fill — real image inside .photo */
+.fill-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  z-index: 0;
+}
+
+/* Red evidence circle */
+.red-circle {
+  position: absolute;
+  border: 4px solid var(--red);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(198,40,40,0.4);
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Handwritten scrawl */
+.scrawl {
+  font-family: 'Caveat', cursive;
+  color: var(--red);
+  font-weight: 700;
+  position: absolute;
+  z-index: 7;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+/* Red yarn line */
+.yarn {
+  position: absolute;
+  height: 3px;
+  background: linear-gradient(90deg, #8b1a1a, #c62828 50%, #8b1a1a);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  transform-origin: left center;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* CLASSIFIED-style box stamp */
+.classified-stamp {
+  font-family: 'Special Elite', monospace;
+  font-weight: 700;
+  color: var(--red);
+  border: 6px solid var(--red);
+  padding: 18px 36px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: rgba(10,8,6,0.2);
+  box-shadow: 0 0 0 2px rgba(198,40,40,0.4);
+  opacity: 0.92;
+  white-space: nowrap;
+}
+
+/* Exhibit label tag */
+.exhibit-header {
+  display: inline-block;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--red-deep);
+  padding: 10px 22px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+}
+
+/* Corner file stamp */
+.file-stamp {
+  position: absolute;
+  font-family: 'Courier Prime', monospace;
+  color: rgba(244,235,214,0.35);
+  font-size: 18px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  border: 2px solid rgba(244,235,214,0.25);
+  padding: 8px 14px;
+  z-index: 8;
+}
+
+/* Act 2 editorial divider */
+.edit-rule {
+  width: 60px; height: 1px;
+  background: var(--charcoal);
+  opacity: 0.4;
+}
+
+/* Act 1 title */
+.title-ty {
+  font-family: 'Special Elite', 'Courier Prime', monospace;
+  color: var(--paper);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.6), 0 0 12px rgba(0,0,0,0.4);
+  letter-spacing: 0.02em;
+}
+</style>
+</head>
+<body>
+
+<!-- Speaker notes — read by deck.js, not rendered -->
+<script type="application/json" id="speaker-notes">
+[
+  "Cold open, deadpan. Tonight we're going to look at the evidence. And by the end of this presentation, you'll never look at a Britney Spears Instagram post the same way again.",
+  "In 2007, Britney shaved her head. In 2008, the conservatorship began. And somewhere in between… she was replaced.",
+  "TikTok sleuths have been tracking this for years. The Hebrew tattoo on her neck? Different. The flowers on her hip? Different placement. The same woman… with different tattoos? Be serious.",
+  "In 2009, court documents were filed. Conspiracy researchers claim one of them was a death certificate — sealed, buried, and covered up by the conservatorship that started the very same year. Coincidence?",
+  "And this one? This one she gave us for free. Britney herself, on Instagram, said the paparazzi photos looked like a different person. A different person! Call me crazy. But when someone tells you they're not who you think they are… believe them.",
+  "Dental records are forensically unique — courts use them to identify bodies. Britney had a signature gap. Then it was gone. Then it came back. Teeth don't do that on their own. But you know what does have different teeth? A different person.",
+  "Drop the conspiratorial voice entirely. Slow down. Okay. Joke's over for a minute. Because there's a reason this theory exists, and it's actually worth saying out loud.",
+  "Direct, sincere. The reason people invent clone theories about Britney is because the real story — what actually happened to her — is almost impossible to believe. A conservatorship that lasted thirteen years. Public ridicule from the time she was a teenager. A system that treated her like property.",
+  "So when we laugh at her dance videos, or pick apart her face, or say 'she must be a clone' — we're doing the same thing Hollywood has done to her for twenty-five years. The joke is on the institutions. Not on her.",
+  "Let the image and text do the work. Hold for one full beat. Let her dance. Let Britney be free."
+]
+</script>
+
+<deck-stage width="1920" height="1080">
+
+<!-- ============================================================== -->
+<!-- SLIDE 1 — TITLE                                                -->
+<!-- ============================================================== -->
+<section data-label="01 Title">
+  <div class="act1">
+    <!-- Corner cards — decorative, low opacity -->
+    <div class="photo-card" style="left:120px;top:140px;width:260px;height:320px;transform:rotate(-7deg);opacity:0.55;">
+      <div class="photo"><div class="stamp">SURVEILLANCE<br>2004</div></div>
+      <div class="caption">SUBJECT · PRE-07</div>
+      <div class="tack" style="top:-14px;left:50%;transform:translateX(-50%);"></div>
+    </div>
+    <div class="photo-card" style="right:140px;top:180px;width:240px;height:300px;transform:rotate(6deg);opacity:0.55;">
+      <div class="photo"><div class="stamp">CANDID<br>2008</div></div>
+      <div class="caption">SUBJECT · POST-07</div>
+      <div class="tack" style="top:-14px;left:50%;transform:translateX(-50%);"></div>
+    </div>
+    <div class="photo-card" style="left:180px;bottom:120px;width:220px;height:260px;transform:rotate(4deg);opacity:0.45;">
+      <div class="photo"><div class="stamp">ARCHIVE</div></div>
+      <div class="caption">FILE 00237-A</div>
+      <div class="tack dark" style="top:-12px;left:50%;transform:translateX(-50%);"></div>
+    </div>
+    <div class="photo-card" style="right:200px;bottom:150px;width:230px;height:280px;transform:rotate(-5deg);opacity:0.5;">
+      <div class="photo"><div class="stamp">REDACTED</div></div>
+      <div class="caption">UNVERIFIED</div>
+      <div class="tack dark" style="top:-12px;left:50%;transform:translateX(-50%);"></div>
+    </div>
+
+    <!-- Center subject — key photo -->
+    <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;height:620px;z-index:4;">
+      <div class="photo-card" style="position:absolute;inset:0;transform:rotate(-2deg);">
+        <div class="photo dim">
+          <img src="assets/img/s1-classified.jpg" alt="Britney Spears mid-2000s" class="fill-photo">
+          <div class="stamp" style="font-size:16px;z-index:2;">
+            SUBJECT PHOTO WITHHELD<br>—<br>CASE #00237
+          </div>
+        </div>
+        <div class="caption" style="font-size:16px;">SUBJECT: B. SPEARS · L.A.</div>
+        <div class="tack" style="top:-16px;left:50%;transform:translateX(-50%);"></div>
+      </div>
+      <!-- CLASSIFIED stamp across face -->
+      <div class="classified-stamp" style="position:absolute;left:50%;top:38%;transform:translate(-50%,-50%) rotate(-8deg);font-size:72px;">
+        CLASSIFIED
+      </div>
+    </div>
+
+    <!-- Title block -->
+    <div style="position:absolute;left:0;right:0;bottom:80px;text-align:center;z-index:8;">
+      <h1 class="title-ty" style="font-size:88px;line-height:1;margin-bottom:24px;">
+        It's Britney Bitch…&nbsp;&nbsp;<span style="color:var(--red);text-shadow:0 0 20px rgba(198,40,40,0.7);">OR IS IT???</span>
+      </h1>
+      <p style="font-family:'Courier Prime',monospace;color:var(--red);font-size:28px;letter-spacing:0.25em;text-transform:uppercase;font-style:italic;">
+        A Decade-Long Investigation · What They Don't Want You To Know
+      </p>
+    </div>
+
+    <div class="file-stamp" style="top:48px;right:60px;">FILE #00237 / TOP SECRET</div>
+    <div class="file-stamp" style="top:48px;left:60px;">DEPT. OF POP FORENSICS</div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 2 — SOMETHING HAPPENED                                   -->
+<!-- ============================================================== -->
+<section data-label="02 Something Happened">
+  <div class="act1">
+    <!-- ERA 1 card (left) -->
+    <div class="photo-card" style="left:160px;top:180px;width:560px;height:680px;transform:rotate(-3deg);">
+      <div class="photo">
+        <img src="assets/img/s2-era1.jpg" alt="Britney Spears early 2000s" class="fill-photo">
+        <div class="stamp" style="color:rgba(40,25,15,0.7);font-size:20px;z-index:2;">
+          SUBJECT · BRIGHT<br>STAGE FOOTAGE<br>2001 – 2004
+        </div>
+      </div>
+      <div class="caption" style="font-size:18px;">EXHIBIT · ERA 1</div>
+      <div class="tack" style="top:-16px;left:20%;"></div>
+      <div class="tack" style="top:-16px;right:20%;"></div>
+    </div>
+
+    <!-- ERA 2 card (right) -->
+    <div class="photo-card" style="right:160px;top:200px;width:560px;height:680px;transform:rotate(4deg);">
+      <div class="photo" style="filter:brightness(0.75);">
+        <img src="assets/img/s2-era2.jpg" alt="Britney Spears 2008" class="fill-photo">
+        <div class="stamp" style="font-size:20px;z-index:2;">
+          SUBJECT · CANDID<br>NIGHT GRAIN<br>2008
+        </div>
+      </div>
+      <div class="caption" style="font-size:18px;">EXHIBIT · ERA 2</div>
+      <div class="tack" style="top:-16px;left:20%;"></div>
+      <div class="tack" style="top:-16px;right:20%;"></div>
+      <!-- Red circle over face -->
+      <div class="red-circle" style="left:50%;top:30%;transform:translate(-50%,-50%) rotate(-6deg);width:240px;height:260px;"></div>
+    </div>
+
+    <!-- Yarn -->
+    <div class="yarn" style="top:360px;left:680px;width:620px;transform:rotate(8deg);"></div>
+    <div class="yarn" style="top:600px;left:700px;width:580px;transform:rotate(-6deg);opacity:0.7;"></div>
+
+    <!-- Headline -->
+    <div style="position:absolute;left:0;right:0;top:70px;text-align:center;z-index:8;">
+      <h1 class="title-ty" style="font-size:72px;line-height:1;">
+        Something&nbsp;<span style="color:var(--red);">happened.</span>
+      </h1>
+    </div>
+
+    <!-- Bottom caption -->
+    <div style="position:absolute;left:0;right:0;bottom:80px;text-align:center;z-index:8;">
+      <p style="font-family:'Special Elite',monospace;font-size:34px;color:var(--paper);line-height:1.4;">
+        Between 2007 and 2008, the Britney Spears we knew… <em style="color:var(--red);">changed.</em>
+      </p>
+      <p style="font-family:'Courier Prime',monospace;font-size:24px;color:var(--red);letter-spacing:0.3em;text-transform:uppercase;margin-top:28px;">
+        Tonight: The Evidence They Buried.
+      </p>
+    </div>
+
+    <div class="scrawl" style="top:240px;left:50%;transform:translateX(-50%) rotate(-4deg);font-size:44px;">
+      SAME WOMAN?
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 3 — EXHIBIT A: TATTOO                                    -->
+<!-- ============================================================== -->
+<section data-label="03 Exhibit A Tattoo">
+  <div class="act1">
+    <div style="position:absolute;left:100px;top:64px;z-index:9;">
+      <div class="exhibit-header" style="font-size:30px;">EXHIBIT&nbsp;A</div>
+      <h1 class="title-ty" style="font-size:72px;margin-top:18px;">
+        The Tattoo <span style="color:var(--red);">Glitch.</span>
+      </h1>
+      <p style="font-family:'Courier Prime',monospace;font-size:24px;color:var(--paper);opacity:0.75;letter-spacing:0.1em;margin-top:14px;">
+        INSTAGRAM · 2022 — PRESENT · THE INK SHIFTS. APPEARS. DISAPPEARS.
+      </p>
+    </div>
+
+    <!-- 4 pinned screenshots -->
+    <div class="photo-card" style="left:140px;top:380px;width:320px;height:400px;transform:rotate(-6deg);">
+      <div class="photo">
+        <img src="assets/img/s3-tattoo-1.jpg" alt="Britney tattoo 2022" class="fill-photo">
+        <div class="stamp" style="z-index:2;">IG POST<br>2022-08<br>LOWER BACK</div>
+      </div>
+      <div class="caption">POST · 08/22</div>
+      <div class="tack" style="top:-14px;left:50%;transform:translateX(-50%);"></div>
+      <div class="red-circle" style="left:50%;top:55%;transform:translate(-50%,-50%);width:150px;height:110px;"></div>
+    </div>
+
+    <div class="photo-card" style="left:540px;top:340px;width:320px;height:400px;transform:rotate(3deg);">
+      <div class="photo">
+        <img src="assets/img/s3-tattoo-2.jpg" alt="Britney tattoo 2023" class="fill-photo">
+        <div class="stamp" style="z-index:2;">IG POST<br>2023-04<br>LOWER BACK</div>
+      </div>
+      <div class="caption">POST · 04/23</div>
+      <div class="tack" style="top:-14px;left:50%;transform:translateX(-50%);"></div>
+      <div class="red-circle" style="left:48%;top:52%;transform:translate(-50%,-50%) rotate(-8deg);width:170px;height:120px;"></div>
+    </div>
+
+    <div class="photo-card" style="left:940px;top:380px;width:320px;height:400px;transform:rotate(-4deg);">
+      <div class="photo">
+        <img src="assets/img/s3-tattoo-3.jpg" alt="Britney tattoo hip flowers" class="fill-photo">
+        <div class="stamp" style="z-index:2;">IG POST<br>2024-01<br>HIP FLOWERS</div>
+      </div>
+      <div class="caption">POST · 01/24</div>
+      <div class="tack" style="top:-14px;left:50%;transform:translateX(-50%);"></div>
+      <div class="red-circle" style="left:52%;top:58%;transform:translate(-50%,-50%);width:140px;height:100px;"></div>
+    </div>
+
+    <div class="photo-card" style="left:1340px;top:340px;width:320px;height:400px;transform:rotate(5deg);">
+      <div class="photo">
+        <img src="assets/img/s3-tattoo-4.jpg" alt="Britney tattoo absent" class="fill-photo">
+        <div class="stamp" style="z-index:2;">IG POST<br>2025-09<br>HIP · NO INK?</div>
+      </div>
+      <div class="caption">POST · 09/25</div>
+      <div class="tack" style="top:-14px;left:50%;transform:translateX(-50%);"></div>
+      <div class="red-circle" style="left:50%;top:55%;transform:translate(-50%,-50%) rotate(6deg);width:160px;height:110px;"></div>
+    </div>
+
+    <!-- Yarn criss-crossing -->
+    <div class="yarn" style="top:450px;left:250px;width:780px;transform:rotate(4deg);"></div>
+    <div class="yarn" style="top:620px;left:280px;width:1200px;transform:rotate(-3deg);opacity:0.75;"></div>
+    <div class="yarn" style="top:520px;left:680px;width:820px;transform:rotate(7deg);opacity:0.6;"></div>
+
+    <!-- Scrawls -->
+    <div class="scrawl" style="top:820px;left:260px;font-size:52px;transform:rotate(-4deg);">WHY?</div>
+    <div class="scrawl" style="top:810px;left:680px;font-size:44px;transform:rotate(3deg);">NOT THE SAME</div>
+    <div class="scrawl" style="top:830px;left:1080px;font-size:48px;transform:rotate(-3deg);">????</div>
+    <div class="scrawl" style="top:820px;left:1460px;font-size:52px;transform:rotate(5deg);">GONE!!!</div>
+
+    <div class="file-stamp" style="bottom:40px;right:60px;">EVIDENCE LOG · A-01 — A-04</div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 4 — EXHIBIT B: THE DOCUMENT                             -->
+<!-- ============================================================== -->
+<section data-label="04 Exhibit B Document">
+  <div class="act1" style="background:
+      radial-gradient(1200px 700px at 50% 40%, rgba(70,50,35,0.55), transparent 60%),
+      radial-gradient(900px 700px at 80% 85%, rgba(30,20,15,0.8), transparent 60%),
+      #141010;">
+
+    <div style="position:absolute;left:100px;top:64px;z-index:9;">
+      <div class="exhibit-header" style="font-size:30px;">EXHIBIT&nbsp;B</div>
+      <h1 class="title-ty" style="font-size:72px;margin-top:18px;">
+        The <span style="color:var(--red);">Document.</span>
+      </h1>
+    </div>
+
+    <!-- Newspaper clippings -->
+    <div style="position:absolute;left:60px;top:360px;width:300px;padding:20px;background:#d8cbaa;color:#2a1f12;font-family:'Courier Prime',monospace;transform:rotate(-7deg);box-shadow:0 10px 24px rgba(0,0,0,0.6);z-index:3;">
+      <div style="font-size:12px;letter-spacing:0.3em;opacity:0.7;">L.A. TIMES · FEB '08</div>
+      <h3 style="font-family:'Special Elite';font-size:28px;line-height:1.1;margin:10px 0;">CONSERVATORSHIP BEGINS</h3>
+      <p style="font-size:13px;line-height:1.4;">Court grants father control of star's affairs; duration indefinite. Sources cite "medical concerns."</p>
+    </div>
+
+    <div style="position:absolute;right:60px;top:320px;width:280px;padding:20px;background:#d8cbaa;color:#2a1f12;font-family:'Courier Prime',monospace;transform:rotate(5deg);box-shadow:0 10px 24px rgba(0,0,0,0.6);z-index:3;">
+      <div style="font-size:12px;letter-spacing:0.3em;opacity:0.7;">PAGE SIX · 2009</div>
+      <h3 style="font-family:'Special Elite';font-size:30px;line-height:1.1;margin:10px 0;">WHERE IS SHE?</h3>
+      <p style="font-size:13px;line-height:1.4;">Fans question sudden public absence. Team issues no statement. Insiders "tight-lipped."</p>
+    </div>
+
+    <div style="position:absolute;left:80px;bottom:80px;width:260px;padding:18px;background:#cfc1a0;color:#2a1f12;font-family:'Courier Prime',monospace;transform:rotate(4deg);box-shadow:0 10px 24px rgba(0,0,0,0.6);z-index:3;">
+      <div style="font-size:12px;letter-spacing:0.3em;opacity:0.7;">TABLOID · MAR '09</div>
+      <h3 style="font-family:'Special Elite';font-size:24px;line-height:1.1;margin:10px 0;">DOCUMENTS SEALED</h3>
+      <p style="font-size:13px;line-height:1.4;">Superior Court orders filings kept from public inspection.</p>
+    </div>
+
+    <!-- Death certificate -->
+    <div style="position:absolute;left:50%;top:54%;transform:translate(-50%,-50%) rotate(-2deg);width:720px;height:560px;z-index:5;">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,#f0e4c4,#dcc99f);padding:48px 60px;color:#3a2a1a;font-family:'Courier Prime',monospace;box-shadow:0 30px 60px rgba(0,0,0,0.8);clip-path:polygon(0 0,100% 0,100% 100%,15% 100%,12% 92%,0 88%);">
+        <div style="text-align:center;border-bottom:2px solid #3a2a1a;padding-bottom:14px;">
+          <div style="font-size:14px;letter-spacing:0.3em;">STATE OF CALIFORNIA · COUNTY OF LOS ANGELES</div>
+          <h2 style="font-family:'Special Elite';font-size:40px;margin-top:8px;letter-spacing:0.06em;">CERTIFICATE OF DEATH</h2>
+          <div style="font-size:12px;letter-spacing:0.2em;opacity:0.7;margin-top:6px;">LOCAL FILE NO. ________ · STATE FILE NO. ________</div>
+        </div>
+        <div style="margin-top:26px;font-size:15px;line-height:2;">
+          <div style="display:flex;justify-content:space-between;">
+            <span>NAME OF DECEDENT:</span>
+            <span style="flex:1;margin-left:14px;background:#1a1410;color:#1a1410;letter-spacing:0.1em;">████████████████████████</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span>DATE OF DEATH:</span>
+            <span style="flex:0 0 280px;background:#1a1410;color:#1a1410;">████████████████</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span>CAUSE OF DEATH:</span>
+            <span style="flex:1;margin-left:14px;background:#1a1410;color:#1a1410;">█████████████████████████████</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span>PLACE:</span>
+            <span style="flex:0 0 380px;background:#1a1410;color:#1a1410;">████████████████████████</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span>CERTIFYING PHYSICIAN:</span>
+            <span style="flex:0 0 300px;background:#1a1410;color:#1a1410;">█████████████████</span>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:54px;left:60px;font-size:13px;opacity:0.8;">
+          FILED: ██/██/2009 · SUPERIOR COURT, L.A.<br>
+          STATUS: <strong>SEALED UNDER CONSERVATORSHIP ORDER</strong>
+        </div>
+      </div>
+      <!-- CONFIDENTIAL stamp -->
+      <div style="position:absolute;right:-40px;top:120px;transform:rotate(14deg);color:var(--red);border:5px solid var(--red);padding:14px 30px;font-family:'Special Elite';font-size:44px;font-weight:700;letter-spacing:0.2em;background:rgba(240,228,196,0.2);box-shadow:0 0 0 2px rgba(198,40,40,0.3);opacity:0.9;">
+        CONFIDENTIAL
+      </div>
+    </div>
+
+    <div style="position:absolute;left:0;right:0;bottom:24px;text-align:center;z-index:9;">
+      <p style="font-family:'Courier Prime',monospace;font-size:24px;color:var(--paper);opacity:0.75;letter-spacing:0.15em;">
+        ALLEGEDLY FILED, 2009. &nbsp;·&nbsp; ALLEGEDLY SEALED. &nbsp;·&nbsp; <em style="color:var(--red);">ALLEGEDLY.</em>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 5 — EXHIBIT C: HER OWN WORDS                            -->
+<!-- ============================================================== -->
+<section data-label="05 Exhibit C Her Words">
+  <div class="act1">
+    <div style="position:absolute;left:100px;top:64px;z-index:9;">
+      <div class="exhibit-header" style="font-size:30px;">EXHIBIT&nbsp;C</div>
+      <h1 class="title-ty" style="font-size:72px;margin-top:18px;">
+        Her <span style="color:var(--red);">Own Words.</span>
+      </h1>
+    </div>
+
+    <!-- Faux Instagram post -->
+    <div style="position:absolute;left:140px;top:300px;width:640px;transform:rotate(-3deg);z-index:5;">
+      <div class="photo-card" style="position:relative;inset:auto;width:100%;height:auto;padding:0;background:#fff;">
+        <div style="padding:18px 22px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:14px;color:#111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ffb6c1,#ff6ec7);flex-shrink:0;"></div>
+          <div>
+            <div style="font-weight:700;font-size:16px;">britneyspears</div>
+            <div style="font-size:13px;color:#666;">Los Angeles, CA</div>
+          </div>
+        </div>
+        <!-- IG photo area -->
+        <div style="height:360px;background:repeating-linear-gradient(135deg,rgba(200,160,100,0.85) 0 6px,rgba(170,130,80,0.85) 6px 12px);position:relative;overflow:hidden;">
+          <img src="assets/img/s5-pap.jpg" alt="Britney paparazzi photo" class="fill-photo">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(40,25,15,0.7);font-family:'Courier Prime',monospace;font-size:14px;letter-spacing:0.2em;z-index:1;">
+            PAP SHOT · SELF-POSTED
+          </div>
+        </div>
+        <div style="padding:22px;color:#111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:18px;line-height:1.5;">
+          <p style="margin-bottom:10px;"><strong>britneyspears</strong> …the way the paps shoot me in public, <strong>I look like a different person</strong> 🌹🌹🌹 is it me??? who knows anymore 😅</p>
+          <div style="font-size:12px;color:#999;letter-spacing:0.06em;">2.3M LIKES · 46K COMMENTS</div>
+        </div>
+        <div class="tack" style="top:-14px;left:50%;transform:translateX(-50%);"></div>
+      </div>
+    </div>
+
+    <!-- Right pap photo card -->
+    <div class="photo-card" style="right:140px;top:260px;width:480px;height:580px;transform:rotate(5deg);">
+      <div class="photo">
+        <img src="assets/img/s5-pap.jpg" alt="Britney paparazzi" class="fill-photo">
+        <div class="stamp" style="z-index:2;">PAPARAZZI · ALLEY<br>LA · 2023</div>
+      </div>
+      <div class="caption">UNVERIFIED SUBJECT</div>
+      <div class="tack" style="top:-14px;left:20%;"></div>
+      <div class="tack" style="top:-14px;right:20%;"></div>
+      <div class="red-circle" style="left:50%;top:32%;transform:translate(-50%,-50%) rotate(-5deg);width:260px;height:300px;"></div>
+    </div>
+
+    <div class="scrawl" style="right:140px;top:220px;font-size:56px;transform:rotate(-4deg);">WHO IS THIS?</div>
+
+    <!-- Yarn connecting quote to face -->
+    <div class="yarn" style="top:520px;left:780px;width:520px;transform:rotate(-4deg);"></div>
+
+    <div style="position:absolute;left:0;right:0;bottom:60px;text-align:center;z-index:9;">
+      <p style="font-family:'Special Elite',monospace;font-size:38px;color:var(--paper);">
+        A different person. &nbsp;<span style="color:var(--red);">Her words.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 6 — EXHIBIT D: THE TEETH DON'T LIE                      -->
+<!-- ============================================================== -->
+<section data-label="06 Exhibit D Teeth">
+  <div class="act1" style="background:
+      radial-gradient(1100px 700px at 50% 50%, rgba(50,50,55,0.5), transparent 60%),
+      #121214;">
+    <div style="position:absolute;left:100px;top:64px;z-index:9;">
+      <div class="exhibit-header" style="font-size:30px;">EXHIBIT&nbsp;D</div>
+      <h1 class="title-ty" style="font-size:72px;margin-top:18px;">
+        The Teeth <span style="color:var(--red);">Don't Lie.</span>
+      </h1>
+      <p style="font-family:'Courier Prime',monospace;font-size:22px;color:var(--paper);opacity:0.7;letter-spacing:0.1em;margin-top:12px;">
+        DENTAL STRUCTURE IS FORENSICALLY UNIQUE. · HERS CHANGED.
+      </p>
+    </div>
+
+    <!-- Dental plate 1 — 2001, gap present -->
+    <div style="position:absolute;left:140px;top:340px;width:440px;z-index:4;">
+      <div style="background:#f4ebd6;padding:14px;box-shadow:0 18px 40px rgba(0,0,0,0.6);">
+        <div style="height:320px;background:repeating-linear-gradient(90deg,rgba(80,50,45,0.95) 0 6px,rgba(60,35,30,0.95) 6px 12px);position:relative;overflow:hidden;">
+          <img src="assets/img/s6-teeth-2001.jpg" alt="Britney smile 2001" class="fill-photo">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#f4ebd6;font-family:'Courier Prime',monospace;font-size:16px;letter-spacing:0.2em;z-index:1;">SMILE · CLOSE-UP</div>
+          <!-- Gap marker -->
+          <div style="position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:14px;height:40px;background:#1a1410;border:2px solid var(--red);z-index:2;"></div>
+        </div>
+        <div style="padding:14px 4px 2px;font-family:'Courier Prime',monospace;color:#2a1f12;font-size:15px;letter-spacing:0.15em;">2001 · GAP PRESENT</div>
+      </div>
+    </div>
+
+    <!-- Dental plate 2 — 2010, gap absent -->
+    <div style="position:absolute;left:740px;top:340px;width:440px;z-index:4;">
+      <div style="background:#f4ebd6;padding:14px;box-shadow:0 18px 40px rgba(0,0,0,0.6);">
+        <div style="height:320px;background:repeating-linear-gradient(90deg,rgba(90,55,50,0.95) 0 6px,rgba(70,40,35,0.95) 6px 12px);position:relative;overflow:hidden;">
+          <img src="assets/img/s6-teeth-2010.jpg" alt="Britney smile 2010" class="fill-photo">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#f4ebd6;font-family:'Courier Prime',monospace;font-size:16px;letter-spacing:0.2em;z-index:1;">SMILE · CLOSE-UP</div>
+          <!-- No-gap marker -->
+          <div style="position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:60px;height:40px;border:2px dashed var(--red);z-index:2;"></div>
+        </div>
+        <div style="padding:14px 4px 2px;font-family:'Courier Prime',monospace;color:#2a1f12;font-size:15px;letter-spacing:0.15em;">2010 · GAP ABSENT</div>
+      </div>
+    </div>
+
+    <!-- Dental plate 3 — 2024, gap reappears -->
+    <div style="position:absolute;left:1340px;top:340px;width:440px;z-index:4;">
+      <div style="background:#f4ebd6;padding:14px;box-shadow:0 18px 40px rgba(0,0,0,0.6);">
+        <div style="height:320px;background:repeating-linear-gradient(90deg,rgba(85,50,45,0.95) 0 6px,rgba(65,38,32,0.95) 6px 12px);position:relative;overflow:hidden;">
+          <img src="assets/img/s6-teeth-2024.jpg" alt="Britney smile 2024" class="fill-photo">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#f4ebd6;font-family:'Courier Prime',monospace;font-size:16px;letter-spacing:0.2em;z-index:1;">SMILE · CLOSE-UP</div>
+          <!-- Gap reappears -->
+          <div style="position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:14px;height:40px;background:#1a1410;border:2px solid var(--red);z-index:2;"></div>
+        </div>
+        <div style="padding:14px 4px 2px;font-family:'Courier Prime',monospace;color:#2a1f12;font-size:15px;letter-spacing:0.15em;">2024 · GAP REAPPEARS</div>
+      </div>
+    </div>
+
+    <!-- Scrawls under plates -->
+    <div class="scrawl" style="top:700px;left:260px;font-size:44px;transform:rotate(-3deg);">baseline.</div>
+    <div class="scrawl" style="top:700px;left:840px;font-size:48px;transform:rotate(2deg);">…where'd it go??</div>
+    <div class="scrawl" style="top:700px;left:1400px;font-size:44px;transform:rotate(-2deg);">it's BACK.</div>
+
+    <!-- Forensic ruler -->
+    <div style="position:absolute;left:100px;right:100px;bottom:120px;height:40px;background:repeating-linear-gradient(90deg,var(--paper) 0 2px,transparent 2px 24px),linear-gradient(var(--paper-dim),var(--paper-dim));opacity:0.6;z-index:3;"></div>
+    <div style="position:absolute;left:100px;right:100px;bottom:80px;font-family:'Courier Prime',monospace;font-size:16px;color:var(--paper);opacity:0.7;letter-spacing:0.3em;display:flex;justify-content:space-between;z-index:3;">
+      <span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50 MM</span>
+    </div>
+
+    <div style="position:absolute;left:0;right:0;bottom:30px;text-align:center;z-index:9;">
+      <p style="font-family:'Caveat',cursive;color:var(--red);font-size:42px;transform:rotate(-1deg);">
+        diastema doesn't come back.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 7 — THE PIVOT                                            -->
+<!-- ============================================================== -->
+<section data-label="07 Pivot">
+  <div class="act2 soft-tex">
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:92px;color:var(--charcoal);letter-spacing:-0.01em;font-style:italic;">
+        …but for real for real.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 8 — THE REAL CONSPIRACY                                  -->
+<!-- ============================================================== -->
+<section data-label="08 The Real Conspiracy">
+  <div class="act2 soft-tex">
+    <!-- Portrait column -->
+    <div style="position:absolute;left:120px;top:120px;bottom:120px;width:560px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="width:100%;aspect-ratio:3/4;position:relative;box-shadow:0 30px 60px rgba(0,0,0,0.15);overflow:hidden;background:repeating-linear-gradient(135deg,rgba(60,55,48,0.92) 0 6px,rgba(80,72,62,0.92) 6px 12px);">
+        <img src="assets/img/s8-portrait.jpg" alt="Britney Spears portrait" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:grayscale(1);z-index:0;">
+        <div style="position:absolute;inset:0;display:flex;align-items:flex-end;padding:28px;color:rgba(246,240,228,0.75);font-family:'EB Garamond';font-style:italic;font-size:22px;letter-spacing:0.02em;line-height:1.3;z-index:1;">
+          Portrait — B. Spears, composed,<br>looking at camera. B&amp;W.
+        </div>
+      </div>
+    </div>
+
+    <!-- Text column -->
+    <div style="position:absolute;right:120px;top:50%;transform:translateY(-50%);width:960px;">
+      <h1 style="font-family:'Playfair Display';font-weight:500;font-size:66px;line-height:1.1;color:var(--charcoal);margin-bottom:44px;letter-spacing:-0.01em;">
+        The real conspiracy.
+      </h1>
+      <div class="edit-rule" style="margin-bottom:36px;"></div>
+      <p style="font-family:'EB Garamond';font-size:34px;line-height:1.5;color:var(--charcoal);margin-bottom:28px;">
+        The toxicity of Hollywood toward women and femmes in the music industry has always been there — but has become more clear in recent years.
+      </p>
+      <p style="font-family:'EB Garamond';font-size:34px;line-height:1.5;color:var(--charcoal-2);margin-bottom:28px;">
+        The conservatorship. Decades of ridicule and manipulation. Medical and relational trauma.
+      </p>
+      <p style="font-family:'Playfair Display';font-style:italic;font-weight:500;font-size:38px;line-height:1.4;color:var(--burgundy);">
+        These things have absolutely affected her mental health.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 9 — CENTER HER STORY                                     -->
+<!-- ============================================================== -->
+<section data-label="09 Center Her Story">
+  <div class="act2 soft-tex">
+    <div style="position:absolute;inset:120px 200px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+      <p style="font-family:'Playfair Display';font-weight:500;font-size:56px;line-height:1.25;color:var(--charcoal);letter-spacing:-0.01em;max-width:1200px;">
+        Center her story. <span style="font-style:italic;">Center her experience.</span>
+      </p>
+      <div class="edit-rule" style="margin:64px auto;width:120px;"></div>
+      <p style="font-family:'EB Garamond';font-size:36px;line-height:1.5;color:var(--charcoal-2);max-width:1200px;margin-bottom:72px;">
+        Our real critiques belong to the institutions of power and dominance that take advantage of young artists and children.
+      </p>
+      <p style="font-family:'Playfair Display';font-weight:600;font-size:84px;line-height:1;color:var(--burgundy);letter-spacing:-0.02em;">
+        Not to her.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!-- SLIDE 10 — LET HER DANCE                                       -->
+<!-- ============================================================== -->
+<section data-label="10 Let Her Dance">
+  <div style="width:100%;height:100%;position:relative;overflow:hidden;">
+    <!-- Background photo — full bleed, warm grade -->
+    <img src="assets/img/s10-dancing.jpg" alt="Britney dancing" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;z-index:0;">
+
+    <!-- Warm golden-hour color wash over photo -->
+    <div style="position:absolute;inset:0;background:radial-gradient(1400px 900px at 30% 40%,rgba(244,201,122,0.45) 0%,rgba(229,154,82,0.5) 40%,rgba(184,98,58,0.55) 75%,rgba(94,42,28,0.7) 100%);z-index:1;"></div>
+
+    <!-- Soft light bleed -->
+    <div style="position:absolute;inset:0;background:radial-gradient(600px 900px at 60% 70%,rgba(246,201,122,0.3),transparent 70%),radial-gradient(400px 600px at 30% 30%,rgba(255,220,160,0.25),transparent 70%);mix-blend-mode:screen;z-index:2;"></div>
+
+    <!-- Text overlay -->
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 140px;z-index:3;">
+      <p style="font-family:'Playfair Display';font-weight:500;font-size:120px;line-height:1;color:#fffaf0;letter-spacing:-0.02em;text-shadow:0 4px 30px rgba(80,30,10,0.5);margin-bottom:20px;">
+        Let her dance.
+      </p>
+      <p style="font-family:'Playfair Display';font-weight:600;font-style:italic;font-size:148px;line-height:1;color:#fffaf0;letter-spacing:-0.02em;text-shadow:0 4px 30px rgba(80,30,10,0.5);">
+        Let Britney be free.
+      </p>
+    </div>
+
+    <!-- Vignette -->
+    <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(60,20,10,0.4) 100%);z-index:4;"></div>
+  </div>
+</section>
+
+</deck-stage>
+
+<script src="deck.js"></script>
+</body>
+</html>
